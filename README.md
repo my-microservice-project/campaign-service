@@ -1,6 +1,6 @@
-# Cart Service
+# Campaign Service
 
-Bu servis, sepet işlemlerini yönetmek için cache based tasarlanmış bir mikroservistir.
+Bu servis, kampanya işlemlerini yönetmek için tasarlanmış bir mikroservistir.
 
 ## 🚀 Başlangıç
 
@@ -14,12 +14,12 @@ Bu servis, sepet işlemlerini yönetmek için cache based tasarlanmış bir mikr
 
 1. Projeyi klonlayın
 ```bash
-git clone https://github.com/my-microservice-project/cart-service
+git clone https://github.com/my-microservice-project/campaign-service
 ```
 
 2. Proje dizinine gidin
 ```bash
-cd cart-service
+cd campaign-service
 ```
 
 3. .env dosyasını oluşturun
@@ -44,7 +44,7 @@ cd .. && docker-compose up -d
 
 7. Container içerisine girin
 ```bash
-docker exec -it phpserver_cart_service
+docker exec -it phpserver_campaign_service
 ```
 8. Composer ile bağımlılıkları yükleyin
 ```bash

@@ -15,7 +15,7 @@ class CalculateCartDiscountResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'campaignResult' => CampaignResultResource::make($this->resource->campaignResult),
+            'appliedCampaigns' => AppliedCampaignResource::collection($this->resource->campaignResult->appliedCampaigns),
             'finalTotal' => $this->resource->finalTotal,
         ];
     }

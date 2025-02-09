@@ -43,7 +43,7 @@ class ProductRepository implements ProductRepositoryInterface
             throw new ProductNotFoundException();
         }
 
-        $productData['name'] = $productData['name'] ?: ($productData['description'] ?? 'Ürün adı mevcut değil');
+        $productData['name'] = isset($productData['name']) ? ($productData['name'] ?: $productData['description']) : $productData['description'];
 
         return ProductDTO::from($productData);
     }

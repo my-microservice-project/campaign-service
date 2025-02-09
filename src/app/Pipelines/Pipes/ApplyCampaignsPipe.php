@@ -1,13 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Pipelines\Pipes;
 
+use App\Data\AppliedCampaignDTO;
 use App\Exceptions\InvalidCampaignTypeException;
 use App\Factories\CampaignProcessorFactory;
 use App\Repositories\Contracts\CampaignRepositoryInterface;
 use App\Data\CampaignResultDTO;
-use App\Data\CartDTO;
+use App\Data\CampaignCalculationPayloadDTO;
 use Closure;
+use Illuminate\Support\Collection;
+use App\Data\CartDTO;
 use Throwable;
 
 class ApplyCampaignsPipe
@@ -17,35 +21,40 @@ class ApplyCampaignsPipe
     ) {}
 
     /**
+     * @throws InvalidCampaignTypeException
      * @throws Throwable
      */
-    public function handle(CartDTO $cart, Closure $next)
+    public function handle(CampaignCalculationPayloadDTO $payload, Closure $next): CampaignCalculationPayloadDTO
     {
-        // Aktif kampanyaları repository üzerinden al.
-        $campaigns = $this->campaignRepository->getActiveCampaigns();
+        $appliedCampaigns = $this->processCampaigns($payload->cart);
+        $payload->campaignResult = new CampaignResultDTO($appliedCampaigns);
 
-        // Uygulanan kampanyaları toplamak için geçici bir koleksiyon oluşturuyoruz.
+        return $next($payload);
+    }
+
+    /**
+     * @param CartDTO $cart
+     * @return Collection<int, AppliedCampaignDTO>
+     * @throws InvalidCampaignTypeException
+     * @throws Throwable
+     */
+    protected function processCampaigns(CartDTO $cart): Collection
+    {
+        $campaigns = $this->campaignRepository->getActiveCampaigns();
         $appliedCampaigns = collect();
 
-        // Her kampanya için tipine uygun processor’ı elde edip iş mantığını çalıştırıyoruz.
-        foreach ($campaigns as $campaign) {
-
+        $campaigns->each(function ($campaign) use ($cart, &$appliedCampaigns) {
             $processor = CampaignProcessorFactory::make($campaign->type);
 
             throw_if($processor === null, new InvalidCampaignTypeException());
 
-            $applied = $processor->process($campaign, $cart);
+            $results = $processor->process($campaign, $cart);
 
-            if(!$applied) {
-                continue;
-            }
+            if($results->isEmpty()) return;
 
-            $appliedCampaigns->push($applied);
+            $appliedCampaigns = $appliedCampaigns->merge($results);
+        });
 
-        }
-
-        $campaignResult = new CampaignResultDTO($appliedCampaigns);
-
-        return $next(['cart' => $cart, 'campaignResult' => $campaignResult]);
+        return $appliedCampaigns;
     }
 }

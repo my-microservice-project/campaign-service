@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Cache;
 
 class ProductRepository implements ProductRepositoryInterface
 {
+    /**
+     * @throws \Throwable
+     */
     public function getProductById(int $productId): ?ProductDTO
     {
         //TODO cache'de bulunamadığı durumda product-service'den çekilecek
@@ -17,8 +20,11 @@ class ProductRepository implements ProductRepositoryInterface
 
         throw_if(!$cachedProduct, new ProductNotFoundException());
 
-        return ProductDTO::from($cachedProduct);
+        if(blank($cachedProduct['name'])){
+            $cachedProduct['name'] = $cachedProduct['description'];
+        }
 
+        return ProductDTO::from($cachedProduct);
     }
 
 }

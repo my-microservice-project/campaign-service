@@ -1,35 +1,63 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Processors;
 
-use App\Data\AppliedCampaignDTO;
+use App\Processors\Abstracts\AbstractCampaignProcessor;
 use App\Data\CartDTO;
 use App\Models\Campaign;
-use App\Processors\Contracts\CampaignProcessorInterface;
+use App\Enums\RuleTypeEnum;
+use App\Enums\ActionTypeEnum;
+use Illuminate\Support\Collection;
+use App\Data\BuyXGetYFreeEligibilityDTO;
+use App\Data\BuyXGetYFreeDiscountDetailsDTO;
 
-class BuyXGetYFreeProcessor implements CampaignProcessorInterface
+class BuyXGetYFreeProcessor extends AbstractCampaignProcessor
 {
-    public function process(Campaign $campaign, CartDTO $cart): ?AppliedCampaignDTO
+    protected string $actionType = ActionTypeEnum::FREE_PRODUCT_QUANTITY->value;
+
+    protected function validateRules(Campaign $campaign, CartDTO $cart): Collection
     {
-        //TODO burada aşağıya tanımlayacağın dinamik kural setlerini, ardından aksiyonları çalıştıracağız.
-        /*
-         * $ruleSets = $this->getRuleSets($campaign);
-         * $actions = $this->getActions($campaign);
-         *
-         * $this->applyRules($ruleSets, $cart);
-         *
-         * $this->applyActions($actions, $cart);
-         */
-        return null;
+        $categoryRule = $campaign->rules()->where('rule_type', RuleTypeEnum::CATEGORY_ID->value)->first();
+        $quantityRule = $campaign->rules()->where('rule_type', RuleTypeEnum::MIN_QUANTITY->value)->first();
+
+        if ($categoryRule === null || $quantityRule === null) {
+            return collect();
+        }
+
+        $eligiblePayloads = collect();
+
+        foreach ($cart->items as $item) {
+            if ($item->categoryId === $categoryRule->value && $item->quantity >= $quantityRule->value) {
+                $eligiblePayloads->push(new BuyXGetYFreeEligibilityDTO(
+                    productId: $item->product_id,
+                    unitPrice: $item->unit_price,
+                    quantity: $item->quantity,
+                    categoryId: $categoryRule->value,
+                    requiredQuantity: $quantityRule->value
+                ));
+            }
+        }
+
+        return $eligiblePayloads ?? collect();
     }
 
-    private function getRuleSets(Campaign $campaign): array
+    protected function calculateDiscount(object $payload, object $action): ?object
     {
-        return [];
-    }
+        /** @var BuyXGetYFreeEligibilityDTO $payload */
 
-    private function getActions(Campaign $campaign): array
-    {
-        return [];
+        $groupCount = (int) floor($payload->quantity / $payload->requiredQuantity);
+
+        $freeQuantity = $groupCount * $action->value;
+        $discountAmount = $payload->unitPrice * $freeQuantity;
+
+        return new BuyXGetYFreeDiscountDetailsDTO(
+            productId: $payload->productId,
+            categoryId: $payload->categoryId,
+            requiredQuantity: $payload->requiredQuantity,
+            freeQuantity: $freeQuantity,
+            unitPrice: $payload->unitPrice,
+            discountAmount: $discountAmount
+        );
     }
 }

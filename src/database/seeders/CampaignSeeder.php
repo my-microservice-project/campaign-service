@@ -17,7 +17,7 @@ class CampaignSeeder extends Seeder
         // Kampanya 1:
         // "Toplam 1000TL ve üzerinde alışveriş yapan bir müşteri, siparişin tamamından %10 indirim kazanır."
         $campaign1 = Campaign::create([
-            'name'        => '1000 TL Üzeri Siparişte %10 İndirim',
+            'name'        => '10_PERCENT_OVER_1000',
             'type'        => CampaignTypeEnum::ORDER_TOTAL_DISCOUNT->getValue(),
             'description' => 'Toplam 1000 TL ve üzeri alışveriş yapan müşterilere %10 indirim uygulanır.',
             'active'      => CampaignStatusEnum::ACTIVE->getValue(),
@@ -42,7 +42,7 @@ class CampaignSeeder extends Seeder
         // Kampanya 2:
         // "2 ID'li kategoriye ait bir üründen 6 adet satın alındığında, bir tanesi ücretsiz olarak verilir."
         $campaign2 = Campaign::create([
-            'name'        => 'Kategori 2 Ürünlerinde 6 Alana 1 Ücretsiz',
+            'name'        => 'BUY_5_GET_1',
             'type'        => CampaignTypeEnum::BUY_X_GET_Y_FREE->getValue(),
             'description' => '2 numaralı kategorideki ürünlerden 6 adet alana 1 adet ücretsiz verilir.',
             'active'      => CampaignStatusEnum::ACTIVE->getValue(),
@@ -73,7 +73,7 @@ class CampaignSeeder extends Seeder
         // Kampanya 3:
         // "1 ID'li kategoriden iki veya daha fazla ürün satın alındığında, en ucuz ürüne %20 indirim yapılır."
         $campaign3 = Campaign::create([
-            'name'        => 'Kategori 1 Ürünlerinde 2+ Alımda En Ucuzda %20 İndirim',
+            'name'        => 'BUY_2_PLUS_GET_20_PERCENT',
             'type'        => CampaignTypeEnum::CATEGORY_DISCOUNT->getValue(),
             'description' => '1 numaralı kategoriden 2 veya daha fazla ürün alındığında, en ucuz ürüne %20 indirim uygulanır.',
             'active'      => CampaignStatusEnum::ACTIVE->getValue(),

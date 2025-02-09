@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Processors\Abstracts;
 
-use App\Processors\Contracts\CampaignProcessorInterface;
-use App\Data\CartDTO;
+use App\Data\Campaign\AppliedCampaignDTO;
+use App\Data\Cart\CartDTO;
 use App\Models\Campaign;
+use App\Processors\Contracts\CampaignProcessorInterface;
 use Illuminate\Support\Collection;
-use App\Data\AppliedCampaignDTO;
 
 abstract class AbstractCampaignProcessor implements CampaignProcessorInterface
 {

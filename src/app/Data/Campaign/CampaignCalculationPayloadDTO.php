@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Data;
+namespace App\Data\Campaign;
 
+use App\Data\Cart\CartDTO;
 use Spatie\LaravelData\Data;
 
 class CampaignCalculationPayloadDTO extends Data

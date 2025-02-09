@@ -3,15 +3,15 @@ declare(strict_types=1);
 
 namespace App\Pipelines\Pipes;
 
-use App\Data\AppliedCampaignDTO;
+use App\Data\Campaign\AppliedCampaignDTO;
+use App\Data\Campaign\CampaignCalculationPayloadDTO;
+use App\Data\Campaign\CampaignResultDTO;
+use App\Data\Cart\CartDTO;
 use App\Exceptions\InvalidCampaignTypeException;
 use App\Factories\CampaignProcessorFactory;
 use App\Repositories\Contracts\CampaignRepositoryInterface;
-use App\Data\CampaignResultDTO;
-use App\Data\CampaignCalculationPayloadDTO;
 use Closure;
 use Illuminate\Support\Collection;
-use App\Data\CartDTO;
 use Throwable;
 
 class ApplyCampaignsPipe

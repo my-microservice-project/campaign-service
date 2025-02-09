@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Data;
+namespace App\Data\Cart;
 
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;

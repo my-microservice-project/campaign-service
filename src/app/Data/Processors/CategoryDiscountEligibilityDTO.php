@@ -1,16 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Data;
+namespace App\Data\Processors;
 
+use App\Data\Cart\CartItemDTO;
 use Spatie\LaravelData\Data;
 
-class BuyXGetYFreeEligibilityDTO extends Data
+class CategoryDiscountEligibilityDTO extends Data
 {
     public function __construct(
-        public int $productId,
-        public float $unitPrice,
-        public int $quantity,
+        public CartItemDTO $cheapestItem,
         public int $categoryId,
         public int $requiredQuantity
     ) {}

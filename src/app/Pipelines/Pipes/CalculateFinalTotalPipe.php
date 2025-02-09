@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Pipelines\Pipes;
 
-use App\Data\CampaignResultDTO;
-use App\Data\CartDTO;
+use App\Data\Campaign\CampaignCalculationPayloadDTO;
+use App\Data\Campaign\CampaignResultDTO;
+use App\Data\Cart\CartDTO;
 use Closure;
-use App\Data\CampaignCalculationPayloadDTO;
 
 class CalculateFinalTotalPipe
 {

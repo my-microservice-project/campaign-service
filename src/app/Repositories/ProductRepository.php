@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Data\ProductDTO;
+use App\Data\Product\ProductDTO;
 use App\Enums\CacheEnum;
 use App\Exceptions\ProductNotFoundException;
 use App\Repositories\Contracts\ProductRepositoryInterface;

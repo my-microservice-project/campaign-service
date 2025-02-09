@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Processors\Contracts;
 
+use App\Data\Cart\CartDTO;
 use App\Models\Campaign;
-use App\Data\CartDTO;
 use Illuminate\Support\Collection;
 
 interface CampaignProcessorInterface

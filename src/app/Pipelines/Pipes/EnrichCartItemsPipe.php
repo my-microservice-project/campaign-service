@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Pipelines\Pipes;
 
-use Closure;
-use App\Data\CampaignCalculationPayloadDTO;
-use App\Data\CartItemDTO;
+use App\Data\Campaign\CampaignCalculationPayloadDTO;
+use App\Data\Cart\CartItemDTO;
 use App\Repositories\Contracts\ProductRepositoryInterface;
+use Closure;
 
 class EnrichCartItemsPipe
 {

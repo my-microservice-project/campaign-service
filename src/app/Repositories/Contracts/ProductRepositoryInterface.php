@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-use App\Data\ProductDTO;
+use App\Data\Product\ProductDTO;
 
 interface ProductRepositoryInterface
 {

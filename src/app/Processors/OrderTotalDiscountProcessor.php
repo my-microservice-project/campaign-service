@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace App\Processors;
 
-use App\Processors\Abstracts\AbstractCampaignProcessor;
-use App\Data\CartDTO;
-use App\Models\Campaign;
-use App\Enums\RuleTypeEnum;
+use App\Data\Cart\CartDTO;
+use App\Data\Processors\OrderTotalDiscountDetailsDTO;
+use App\Data\Processors\OrderTotalEligibilityDTO;
 use App\Enums\ActionTypeEnum;
+use App\Enums\RuleTypeEnum;
+use App\Models\Campaign;
+use App\Processors\Abstracts\AbstractCampaignProcessor;
 use Illuminate\Support\Collection;
-use App\Data\OrderTotalEligibilityDTO;
-use App\Data\OrderTotalDiscountDetailsDTO;
 
 class OrderTotalDiscountProcessor extends AbstractCampaignProcessor
 {

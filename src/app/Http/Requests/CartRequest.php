@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Data\CartDTO;
-use App\Data\CartItemDTO;
+use App\Data\Cart\CartDTO;
+use App\Data\Cart\CartItemDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CartRequest extends FormRequest

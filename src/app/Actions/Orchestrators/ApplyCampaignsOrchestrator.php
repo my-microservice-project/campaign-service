@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Actions\Orchestrators;
 
-use App\Data\CartDTO;
-use App\Data\CampaignCalculationPayloadDTO;
-use App\Pipelines\Pipes\{EnrichCartItemsPipe, ApplyCampaignsPipe, CalculateFinalTotalPipe};
+use App\Data\Campaign\CampaignCalculationPayloadDTO;
+use App\Data\Cart\CartDTO;
+use App\Pipelines\Pipes\{ApplyCampaignsPipe, CalculateFinalTotalPipe, EnrichCartItemsPipe};
 use Illuminate\Pipeline\Pipeline;
 
 class ApplyCampaignsOrchestrator

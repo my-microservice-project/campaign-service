@@ -74,6 +74,7 @@ class CartDiscountController extends Controller
     )]
     public function calculate(CartRequest $request, ApplyCampaignsOrchestrator $action): CalculateCartDiscountResource
     {
-        return CalculateCartDiscountResource::make($action->execute($request->payload()))->additional(['success' => true]);
+        $campaigns = $action->execute($request->payload());
+        return CalculateCartDiscountResource::make($campaigns)->additional(['success' => true]);
     }
 }

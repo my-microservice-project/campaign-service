@@ -1,0 +1,170 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Campaign Service",
+        "description": "Campaign API Documentation",
+        "contact": {
+            "email": "bugrabozkurtt@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/calculate-discount": {
+            "post": {
+                "tags": [
+                    "Cart Discounts"
+                ],
+                "summary": "Calculate discounts for cart items",
+                "description": "Calculates applicable discounts and campaigns for the given cart items",
+                "operationId": "a77cbda1906f32122aba6b842f6a8790",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CartRequest"
+                            },
+                            "example": {
+                                "items": [
+                                    {
+                                        "product_id": 100,
+                                        "quantity": 2,
+                                        "unit_price": 120.75
+                                    },
+                                    {
+                                        "product_id": 101,
+                                        "quantity": 1,
+                                        "unit_price": 49.5
+                                    },
+                                    {
+                                        "product_id": 102,
+                                        "quantity": 1,
+                                        "unit_price": 11.28
+                                    },
+                                    {
+                                        "product_id": 103,
+                                        "quantity": 6,
+                                        "unit_price": 22.8
+                                    },
+                                    {
+                                        "product_id": 104,
+                                        "quantity": 2,
+                                        "unit_price": 12.95
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CampaignResultDTO"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CampaignResultDTO": {
+                "title": "Campaign Result",
+                "description": "Result of campaign calculations",
+                "required": [
+                    "appliedCampaigns"
+                ],
+                "properties": {
+                    "appliedCampaigns": {
+                        "description": "List of applied campaigns",
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "CartItemDTO": {
+                "title": "Cart Item",
+                "description": "An item in the shopping cart",
+                "required": [
+                    "product_id",
+                    "unit_price",
+                    "quantity"
+                ],
+                "properties": {
+                    "product_id": {
+                        "description": "ID of the product",
+                        "type": "integer"
+                    },
+                    "unit_price": {
+                        "description": "Unit price of the product",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "quantity": {
+                        "description": "Quantity of the product",
+                        "type": "integer"
+                    },
+                    "categoryId": {
+                        "description": "Optional category ID",
+                        "type": "integer",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "CartRequest": {
+                "title": "Cart Request",
+                "description": "Request payload for calculating cart discounts",
+                "required": [
+                    "items"
+                ],
+                "properties": {
+                    "items": {
+                        "description": "List of cart items",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CartItemDTO"
+                        }
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Cart Discounts",
+            "description": "API Endpoints for cart discount calculations"
+        }
+    ]
+}

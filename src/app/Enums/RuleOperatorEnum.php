@@ -8,10 +8,8 @@ enum RuleOperatorEnum: string
 {
     use EnumTrait;
 
-    case GREATER = '>';
-    case LESS = '<';
-    case EQUAL = '=';
     case GREATER_OR_EQUAL = '>=';
-    case LESS_OR_EQUAL = '<=';
+    case EQUAL = '==';
+    case GREATER = '>';
 
 }

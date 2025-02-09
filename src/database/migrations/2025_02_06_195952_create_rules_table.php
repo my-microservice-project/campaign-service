@@ -16,13 +16,10 @@ return new class extends Migration
         Schema::create('rules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('campaign_id')->constrained()->onDelete('cascade');
-            $table->enum('type', RuleTypeEnum::allCaseValues());
-            $table->enum('operator', RuleOperatorEnum::allCaseValues());
-            $table->string('value');
-            $table->json('additional_data')->nullable();
+            $table->enum('rule_type',RuleTypeEnum::allCaseValues());
+            $table->enum('operator',RuleOperatorEnum::allCaseValues())->nullable();
+            $table->integer('value');
             $table->timestamps();
-
-            $table->index(['campaign_id', 'type','operator']);
         });
     }
 

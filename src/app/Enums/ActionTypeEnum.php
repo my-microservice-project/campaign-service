@@ -8,8 +8,6 @@ enum ActionTypeEnum: string
 {
     use EnumTrait;
 
-    case PERCENTAGE_DISCOUNT = 'percentage_discount';
-    case FIXED_DISCOUNT = 'fixed_discount';
-    case FREE_PRODUCT = 'free_product';
-
+    case DISCOUNT_PERCENTAGE = 'discount_percentage';
+    case FREE_PRODUCT_QUANTITY = 'free_product_quantity';
 }

@@ -2,28 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Enums\ActionTypeEnum;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Action extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'campaign_id',
-        'type',
-        'value',
-        'min_affected_items',
-        'max_affected_items',
-        'max_discount_amount',
-        'additional_data',
-        'priority',
+        'action_type',
+        'value'
     ];
 
     protected $casts = [
-        'additional_data' => 'array',
-        'type'            => ActionTypeEnum::class,
-        'value'           => 'decimal:2',
-        'max_discount_amount' => 'decimal:2',
+        'action_type' => ActionTypeEnum::class,
     ];
 
     public function campaign(): BelongsTo

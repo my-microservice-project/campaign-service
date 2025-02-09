@@ -15,16 +15,9 @@ return new class extends Migration
         Schema::create('actions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('campaign_id')->constrained()->onDelete('cascade');
-            $table->enum('type',ActionTypeEnum::allCaseValues());
-            $table->decimal('value', 10, 2);
-            $table->integer('min_affected_items')->nullable();
-            $table->integer('max_affected_items')->nullable();
-            $table->decimal('max_discount_amount', 10, 2)->nullable();
-            $table->json('additional_data')->nullable();
-            $table->integer('priority')->default(0);
+            $table->enum('action_type',ActionTypeEnum::allCaseValues())->comment('Aksiyon tipi (örn: discount_percentage, free_product)');
+            $table->integer('value');
             $table->timestamps();
-
-            $table->index(['campaign_id', 'type']);
         });
     }
 

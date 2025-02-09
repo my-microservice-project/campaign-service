@@ -2,25 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Enums\RuleTypeEnum;
 use App\Enums\RuleOperatorEnum;
+use App\Enums\RuleTypeEnum;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Rule extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'campaign_id',
-        'type',
+        'rule_type',
         'operator',
-        'value',
-        'additional_data',
+        'value'
     ];
 
     protected $casts = [
-        'additional_data' => 'array',
-        'type'            => RuleTypeEnum::class,
-        'operator'        => RuleOperatorEnum::class,
+        'rule_type' => RuleTypeEnum::class,
+        'operator' => RuleOperatorEnum::class
     ];
 
     public function campaign(): BelongsTo

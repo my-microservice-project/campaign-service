@@ -16,17 +16,15 @@ return new class extends Migration
         Schema::create('campaigns', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('type',CampaignTypeEnum::allCaseValues())->comment('Kampanya türü (order_total_discount, buy_x_get_y_free, category_discount)');
             $table->text('description')->nullable();
-            $table->timestamp('start_date');
-            $table->timestamp('end_date');
-            $table->enum('status', CampaignStatusEnum::allCaseValues())->default(0);
+            $table->enum('active',CampaignStatusEnum::allCaseValues())->default(CampaignStatusEnum::ACTIVE->getValue());
+            $table->timestamp('start_at')->nullable();
+            $table->timestamp('end_at')->nullable();
             $table->integer('priority')->default(0);
-            $table->enum('type', CampaignTypeEnum::allCaseValues());
             $table->timestamps();
-
-            $table->index(['status', 'start_date', 'end_date']);
-            $table->index('priority');
         });
+
     }
 
     /**

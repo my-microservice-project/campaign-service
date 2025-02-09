@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Data\CartDTO;
+use App\Data\CartItemDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CartRequest extends FormRequest
@@ -11,17 +12,17 @@ class CartRequest extends FormRequest
     {
         return [
             'items'               => 'required|array',
-            'items.*.product_id'    => 'required|integer',
-            'items.*.quantity'      => 'required|integer|min:1',
-            'items.*.unit_price'    => 'required|numeric',
-            'items.*.total_price'   => 'required|numeric',
-            'total_items'           => 'required|integer',
-            'total_price'           => 'required|numeric',
+            'items.*.product_id'  => 'required|integer',
+            'items.*.quantity'    => 'required|integer|min:1',
+            'items.*.unit_price'  => 'required|numeric|min:0'
         ];
     }
 
     public function payload(): CartDTO
     {
-        return CartDTO::from($this->validated());
+        $cartItems = collect($this->validated()['items'])
+            ->map(fn($item) => CartItemDTO::from($item));
+
+        return CartDTO::from(['items' => $cartItems]);
     }
 }

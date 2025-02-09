@@ -8,7 +8,8 @@ enum RuleTypeEnum: string
 {
     use EnumTrait;
 
-    case CART_AMOUNT = 'cart_amount';
-    case PRODUCT_QUANTITY = 'product_quantity';
+    case MIN_TOTAL = 'min_total';
+    case MIN_QUANTITY = 'min_quantity';
+    case CATEGORY_ID = 'category_id';
 
 }

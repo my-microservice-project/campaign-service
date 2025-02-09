@@ -2,45 +2,36 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Enums\CampaignStatusEnum;
-use App\Enums\CampaignTypeEnum;
 
-/**
- * @property mixed $type
- */
 class Campaign extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'name',
-        'description',
-        'start_date',
-        'end_date',
-        'status',
-        'priority',
         'type',
+        'description',
+        'active',
+        'start_at',
+        'end_at',
+        'priority'
     ];
 
-    protected $casts = [
-        'start_date' => 'datetime',
-        'end_date'   => 'datetime',
-        'status'        => CampaignStatusEnum::class,
-        'type'           => CampaignTypeEnum::class,
+    protected $dates = [
+        'start_at',
+        'end_at',
     ];
-
-    public function actions(): HasMany
-    {
-        return $this->hasMany(Action::class);
-    }
 
     public function rules(): HasMany
     {
         return $this->hasMany(Rule::class);
     }
 
-    public function targets(): HasMany
+    public function actions(): HasMany
     {
-        return $this->hasMany(Target::class);
+        return $this->hasMany(Action::class);
     }
 }

@@ -21,7 +21,7 @@ class CampaignSeeder extends Seeder
             'type'        => CampaignTypeEnum::ORDER_TOTAL_DISCOUNT->getValue(),
             'description' => 'Toplam 1000 TL ve üzeri alışveriş yapan müşterilere %10 indirim uygulanır.',
             'active'      => CampaignStatusEnum::ACTIVE->getValue(),
-            'priority'    => 2,
+            'priority'    => 1,
             'start_at'    => now(),
             'end_at'      => now()->addMonth(),
         ]);
@@ -46,7 +46,7 @@ class CampaignSeeder extends Seeder
             'type'        => CampaignTypeEnum::BUY_X_GET_Y_FREE->getValue(),
             'description' => '2 numaralı kategorideki ürünlerden 6 adet alana 1 adet ücretsiz verilir.',
             'active'      => CampaignStatusEnum::ACTIVE->getValue(),
-            'priority'    => 1,
+            'priority'    => 3,
             'start_at'    => now(),
             'end_at'      => now()->addMonth(),
         ]);
@@ -77,7 +77,7 @@ class CampaignSeeder extends Seeder
             'type'        => CampaignTypeEnum::CATEGORY_DISCOUNT->getValue(),
             'description' => '1 numaralı kategoriden 2 veya daha fazla ürün alındığında, en ucuz ürüne %20 indirim uygulanır.',
             'active'      => CampaignStatusEnum::ACTIVE->getValue(),
-            'priority'    => 3,
+            'priority'    => 2,
             'start_at'    => now(),
             'end_at'      => now()->addMonth(),
         ]);
@@ -100,5 +100,9 @@ class CampaignSeeder extends Seeder
             'action_type' => ActionTypeEnum::DISCOUNT_PERCENTAGE->getValue(),
             'value'       => 20
         ]);
+
+
+
+        $campaign3->incompatibleCampaigns()->attach($campaign2->id);
     }
 }

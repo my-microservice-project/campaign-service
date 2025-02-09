@@ -43,18 +43,45 @@ class ApplyCampaignsPipe
         $campaigns = $this->campaignRepository->getActiveCampaigns();
         $appliedCampaigns = collect();
 
-        $campaigns->each(function ($campaign) use ($cart, &$appliedCampaigns) {
-            $processor = CampaignProcessorFactory::make($campaign->type);
+        $campaigns->sortByDesc('priority')->each(function ($campaign) use ($cart, &$appliedCampaigns) {
+            if (!$this->isCampaignCompatible($campaign, $appliedCampaigns)) {
+                return;
+            }
 
-            throw_if($processor === null, new InvalidCampaignTypeException());
+            $results = $this->applyCampaign($campaign, $cart);
 
-            $results = $processor->process($campaign, $cart);
-
-            if($results->isEmpty()) return;
-
-            $appliedCampaigns = $appliedCampaigns->merge($results);
+            if ($results->isNotEmpty()) {
+                $appliedCampaigns = $appliedCampaigns->merge($results);
+            }
         });
 
         return $appliedCampaigns;
+    }
+
+    /**
+     * Kampanyanın, daha önce uygulanan kampanyalarla uyumlu olup olmadığını kontrol eder.
+     */
+    protected function isCampaignCompatible($campaign, Collection $appliedCampaigns): bool
+    {
+        foreach ($appliedCampaigns as $appliedCampaign) {
+            if (!$campaign->isCompatibleWith($appliedCampaign->campaign)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Kampanyayı uygular ve sonucu döndürür.
+     *
+     * @throws InvalidCampaignTypeException
+     * @throws Throwable
+     */
+    protected function applyCampaign($campaign, CartDTO $cart): Collection
+    {
+        $processor = CampaignProcessorFactory::make($campaign->type);
+        throw_if($processor === null, new InvalidCampaignTypeException());
+
+        return $processor->process($campaign, $cart);
     }
 }

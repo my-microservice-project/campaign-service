@@ -10,6 +10,7 @@ class AppliedCampaignDTO extends Data
     public function __construct(
         public string $campaignName,
         public string $campaignType,
-        public object $discountDetails
+        public object $discountDetails,
+        public object $campaign
     ) {}
 }

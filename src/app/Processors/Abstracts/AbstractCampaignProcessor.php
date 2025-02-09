@@ -31,7 +31,8 @@ abstract class AbstractCampaignProcessor implements CampaignProcessorInterface
             return new AppliedCampaignDTO(
                 campaignName: $campaign->name,
                 campaignType: $campaign->type,
-                discountDetails: $discountDetails
+                discountDetails: $discountDetails,
+                campaign: $campaign
             );
 
         });

@@ -27,19 +27,21 @@ class BuyXGetYFreeProcessor extends AbstractCampaignProcessor
 
         $eligiblePayloads = collect();
 
-        foreach ($cart->items as $item) {
-            if ($item->categoryId === $categoryRule->value && $item->quantity >= $quantityRule->value) {
-                $eligiblePayloads->push(new BuyXGetYFreeEligibilityDTO(
-                    productId: $item->product_id,
-                    unitPrice: $item->unit_price,
-                    quantity: $item->quantity,
-                    categoryId: $categoryRule->value,
-                    requiredQuantity: $quantityRule->value
-                ));
+        foreach ($cart->items->toCollection() as $item) {
+            if ($item->categoryId !== $categoryRule->value || $item->quantity < $quantityRule->value) {
+                continue;
             }
+
+            $eligiblePayloads->push(new BuyXGetYFreeEligibilityDTO(
+                productId: $item->product_id,
+                unitPrice: $item->unit_price,
+                quantity: $item->quantity,
+                categoryId: $categoryRule->value,
+                requiredQuantity: $quantityRule->value
+            ));
         }
 
-        return $eligiblePayloads ?? collect();
+        return $eligiblePayloads;
     }
 
     protected function calculateDiscount(object $payload, object $action): ?object

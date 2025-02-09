@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace App\Data\Cart;
 
-use Illuminate\Support\Collection;
+use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\DataCollection;
 
 class CartDTO extends Data
 {
     public function __construct(
-        public readonly Collection $items
+        #[DataCollectionOf(CartItemDTO::class)]
+        public readonly DataCollection $items
     ) {}
 }

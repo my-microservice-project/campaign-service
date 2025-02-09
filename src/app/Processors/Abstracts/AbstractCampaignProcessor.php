@@ -15,27 +15,21 @@ abstract class AbstractCampaignProcessor implements CampaignProcessorInterface
 
     final public function process(Campaign $campaign, CartDTO $cart): Collection
     {
-
         $eligibleItems = $this->validateRules($campaign, $cart);
 
         $actions = $this->getActions($campaign);
 
         return $eligibleItems->flatMap(function (object $payload) use ($actions, $campaign): Collection {
-
-            return $actions->map(function (object $action) use ($payload): ?object {
-                return $this->calculateDiscount($payload, $action);
-            })->filter();
-
-        })->map(function (object $discountDetails) use ($campaign): AppliedCampaignDTO {
-
-            return new AppliedCampaignDTO(
+            return $actions
+                ->map(fn(object $action): ?object => $this->calculateDiscount($payload, $action))
+                ->filter();
+        })->map(
+            static fn(object $discountDetails): AppliedCampaignDTO => new AppliedCampaignDTO(
                 campaignName: $campaign->name,
                 campaignType: $campaign->type,
                 discountDetails: $discountDetails,
                 campaign: $campaign
-            );
-
-        });
+            ));
     }
 
     /**

@@ -20,7 +20,7 @@ class OrderTotalDiscountProcessor extends AbstractCampaignProcessor
     {
         $minTotalRule = $campaign->rules()->where('rule_type', RuleTypeEnum::MIN_TOTAL->value)->first() ?? collect();
 
-        $total = $cart->items->sum(fn($item) => $item->unit_price * $item->quantity);
+        $total = $cart->items->toCollection()->sum(fn($item) => $item->unit_price * $item->quantity);
 
         if ($total < $minTotalRule->value) return collect();
 

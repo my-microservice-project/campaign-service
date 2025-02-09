@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $campaign_id
+ * @property ActionTypeEnum $action_type
+ * @property string $value
+ */
 class Action extends Model
 {
     use HasFactory;

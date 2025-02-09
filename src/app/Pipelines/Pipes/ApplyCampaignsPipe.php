@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Pipelines\Pipes;
 
+use App\Contracts\CampaignPipeInterface;
 use App\Data\Campaign\AppliedCampaignDTO;
 use App\Data\Campaign\CampaignCalculationPayloadDTO;
 use App\Data\Campaign\CampaignResultDTO;
@@ -14,11 +15,13 @@ use Closure;
 use Illuminate\Support\Collection;
 use Throwable;
 
-class ApplyCampaignsPipe
+class ApplyCampaignsPipe implements CampaignPipeInterface
 {
     public function __construct(
         protected CampaignRepositoryInterface $campaignRepository
-    ) {}
+    )
+    {
+    }
 
     /**
      * @throws InvalidCampaignTypeException
@@ -27,6 +30,7 @@ class ApplyCampaignsPipe
     public function handle(CampaignCalculationPayloadDTO $payload, Closure $next): CampaignCalculationPayloadDTO
     {
         $appliedCampaigns = $this->processCampaigns($payload->cart);
+
         $payload->campaignResult = new CampaignResultDTO($appliedCampaigns);
 
         return $next($payload);
@@ -43,17 +47,20 @@ class ApplyCampaignsPipe
         $campaigns = $this->campaignRepository->getActiveCampaigns();
         $appliedCampaigns = collect();
 
-        $campaigns->sortByDesc('priority')->each(function ($campaign) use ($cart, &$appliedCampaigns) {
-            if (!$this->isCampaignCompatible($campaign, $appliedCampaigns)) {
-                return;
-            }
+        $campaigns->sortByDesc('priority')
+            ->each(function ($campaign) use ($cart, &$appliedCampaigns) {
+                if (!$this->isCampaignCompatible($campaign, $appliedCampaigns)) {
+                    return;
+                }
 
-            $results = $this->applyCampaign($campaign, $cart);
+                $processedCampaigns = $this->applyCampaign($campaign, $cart);
 
-            if ($results->isNotEmpty()) {
-                $appliedCampaigns = $appliedCampaigns->merge($results);
-            }
-        });
+                if ($processedCampaigns->isEmpty()) {
+                    return;
+                }
+
+                $appliedCampaigns = $appliedCampaigns->merge($processedCampaigns);
+            });
 
         return $appliedCampaigns;
     }
@@ -63,12 +70,9 @@ class ApplyCampaignsPipe
      */
     protected function isCampaignCompatible($campaign, Collection $appliedCampaigns): bool
     {
-        foreach ($appliedCampaigns as $appliedCampaign) {
-            if (!$campaign->isCompatibleWith($appliedCampaign->campaign)) {
-                return false;
-            }
-        }
-        return true;
+        return $appliedCampaigns->every(function ($appliedCampaign) use ($campaign) {
+            return $campaign->isCompatibleWith($appliedCampaign->campaign);
+        });
     }
 
     /**
@@ -80,7 +84,7 @@ class ApplyCampaignsPipe
     protected function applyCampaign($campaign, CartDTO $cart): Collection
     {
         $processor = CampaignProcessorFactory::make($campaign->type);
-        throw_if($processor === null, new InvalidCampaignTypeException());
+        throw_if($processor === null, InvalidCampaignTypeException::class);
 
         return $processor->process($campaign, $cart);
     }

@@ -30,7 +30,7 @@ class CategoryDiscountProcessor extends AbstractCampaignProcessor
             return collect();
         }
 
-        $categoryItems = $cart->items->filter(
+        $categoryItems = $cart->items->toCollection()->filter(
             fn($item) => $item->categoryId === $categoryRule->value
         ) ?? collect();
 
